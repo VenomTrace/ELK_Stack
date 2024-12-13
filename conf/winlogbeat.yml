@@ -1,0 +1,40 @@
+###################### Winlogbeat Configuration Example ########################
+
+winlogbeat.event_logs:
+  - name: Application
+    ignore_older: 72h
+
+  - name: System
+
+  - name: Security
+
+  - name: Microsoft-Windows-Sysmon/Operational
+
+  - name: Windows PowerShell
+    event_id: 400, 403, 600, 800
+
+  - name: Microsoft-Windows-PowerShell/Operational
+    event_id: 4103, 4104, 4105, 4106
+
+  - name: ForwardedEvents
+    tags: [forwarded]
+
+
+setup.template.name: "winlogbeat_template"
+setup.template.pattern: "winlogbeat-*"
+setup.template.settings:
+  index.number_of_shards: 1
+
+setup.dashboards.enabled: true
+
+setup.kibana:
+  host: "http://10.10.10.16:5601"
+
+output.elasticsearch:
+  hosts: ["http://10.10.10.16:9200"]
+  index: winlogbeat-${COMPUTERNAME}-%{+yyyy.MM.dd}
+  pipeline: "winlogbeat-%{[agent.version]}-routing"
+
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded

@@ -1,0 +1,40 @@
+# =================== System: Kibana Server ===================
+server.port: 5601
+server.host: "0.0.0.0"
+server.rewriteBasePath: false
+server.maxPayload: 1048576
+server.name: "your-hostname"
+
+# =================== System: Elasticsearch ===================
+elasticsearch.hosts: ["http://0.0.0.0:9200"]
+elasticsearch.username: "kibana_system"
+
+# =================== System: Logging ===================
+logging.root.level: debug
+logging:
+  appenders:
+    file:
+      type: file
+      fileName: /var/log/kibana/kibana.log
+      layout:
+        type: json
+  root:
+    appenders:
+      - default
+      - file
+
+# =================== System: Other ===================
+pid.file: /run/kibana/kibana.pid
+ops.interval: 5000
+i18n.locale: "en"
+
+# =================== Frequently used (Optional)===================
+
+# =================== Saved Objects: Migrations ===================
+migrations.batchSize: 1000
+migrations.maxBatchSizeBytes: 100mb
+migrations.retryAttempts: 15
+
+# =================== Search Autocomplete ===================
+unifiedSearch.autocomplete.valueSuggestions.timeout: 1000
+unifiedSearch.autocomplete.valueSuggestions.terminateAfter: 100000

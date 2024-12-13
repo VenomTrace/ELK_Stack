@@ -1,0 +1,28 @@
+filebeat.inputs:
+  - type: filestream
+    id: my-dns-input
+    enabled: true
+    paths:
+      - C:\Users\Administrator\dns\dns1.log
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+output.logstash:
+  hosts: ["10.10.10.17:5045"]
+  #ssl.enabled: false                    # Enable SSL encryption
+  #ssl.verification_mode: full           # Enable full verification (verify certificate chain)
+  #ssl.certificate_authorities: ["C:\\Users\\Administrator\\Downloads\\my_ca\\my_ca.crt"]  # Path to the CA certificate that signed Logstash's certificate
+  #ssl.certificate: "C:\\Users\\Administrator\\Downloads\\Cert\\filebeat.crt"  # Filebeat's certificate (optional for mutual authentication)
+  #ssl.key: "C:\\Users\\Administrator\\Downloads\\Cert\\filebeat-decrypted.key"
+
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
